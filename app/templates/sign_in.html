@@ -3,22 +3,20 @@
 <form method="post">
   
     <div class="container">
-      <label for="uname"><b>Q1</b></label>
+      <label for="uname"><b>Username</b></label>
       <input type="text" placeholder="Enter Username" name="uname" required>
   
-      <label for="psw"><b>Q2</b></label>
+      <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="psw" required>
-      <label for="uname"><b>Q3</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-      
-      <label for="uname"><b>Q4</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-
-      <button type="submit">Submit</button>
+  
+      <button type="submit">Login</button>
     </div>
   
   </form>
   
+  <div class="container" style="background-color:#f1f1f1">
+    <a href={{url_for('index.reset_password')}} >    <button>Forgot Password</button></a>
+  </div>
   <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
     crossorigin="anonymous"></script>
   <script src="{{ url_for('static', filename='js/sign_in.js') }}"></script>

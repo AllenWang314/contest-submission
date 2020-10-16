@@ -1,0 +1,18 @@
+<html>
+  <div id = "password-container">
+<form action="{{url_for('index.reset')}}" method="post">
+
+    <div class="container">
+      <label for="uname"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="uname" required>
+    </div>
+
+    <button type="submit">Submit</button>
+
+  </form>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/password.js') }}"></script>
+  </div>
+</html>

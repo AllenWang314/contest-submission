@@ -13,14 +13,14 @@ class Contest(db.Model):
 
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Text, nullable=False)
-    deadline = Column(Text, nullable=False)
+    body = Column(Text, nullable=False)
     num_questions = Column(Integer, nullable=False)
     answers = Column(ARRAY(Integer), nullable=True)
     active = Column(Boolean, nullable=False)
 
-    def populate(self, name, deadline, num_questions, answers, active) :
+    def populate(self, name, body, num_questions, answers, active) :
         self.name = name
-        self.deadline = deadline # in YYYYMMDDHHMM format
+        self.body = body
         self.num_questions = num_questions
         self.answers = answers
         self.active = active

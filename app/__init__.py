@@ -1,6 +1,7 @@
 import os
 from flask import Flask, session, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 
 application = None
 db = None
@@ -12,7 +13,7 @@ def load_from_env(app, *args):
         app.config[a] = os.environ[a]
 
 def create_app():
-    global application, db
+    global application, db, bcrypt, session, mail
 
     application = Flask(__name__, static_folder='static')
 
@@ -21,7 +22,15 @@ def create_app():
         application.config.from_pyfile('../config.py')
         print("Loading secret configs from file")
     else:
+        # TODO add load_from_env call
         print("Loading from environment variables")
+
+    # set up emails
+    application.config['MAIL_SERVER'] ='smtp.gmail.com'
+    application.config['MAIL_PORT'] = 465
+    application.config['MAIL_USE_TLS'] = False
+    application.config['MAIL_USE_SSL'] = True
+    mail = Mail(application)
 
     # load database
     db = SQLAlchemy(application)
