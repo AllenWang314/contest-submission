@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}User Exists{% endblock %}
+{% block content %}
+
+<div>
+There is already an account associated with the email submitted, please try 
+signing in <a href="{{url_for('index.sign_in')}}">here</a>
+</div>
+{% endblock %}

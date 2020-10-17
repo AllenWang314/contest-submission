@@ -1,10 +1,10 @@
 <html>
   <div id = "password-container">
-<form action="{{url_for('index.reset')}}" method="post">
+<form action="{{url_for('index.handle_reset')}}" method="post">
 
     <div class="container">
-      <label for="uname"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" name="uname" required>
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
     </div>
 
     <button type="submit">Submit</button>

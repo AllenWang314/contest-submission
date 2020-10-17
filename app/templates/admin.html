@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<div>
+    <h2>Students</h2>
+    <table class="ui sortable celled table">
+    <thead>
+      <tr>
+        <th class="">ID</th>
+        <th class="">Token</th>
+        <th class="">Name</th>
+        <th class="">Password</th>
+        <th class="">Email</th>
+        <th class="">Grade</th>  
+        <th class="">Gender</th>  
+        <th class="">School</th>
+        <th class="">Active</th>  
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for student in students.values()|sort(attribute='id') %}
+        <tr>
+          <td>{{ student.id}}</td>
+          <td>{{ student.token}}</td>
+          <td>{{ student.name}}</td>
+          <td>{{ student.password}}</td>
+          <td>{{ student.email}}</td>
+          <td>{{ student.grade}}</td>
+          <td>{{ student.gender}}</td>
+          <td>{{ student.school}}</td>
+          <td>{{ student.active}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<div>
+    <h2>Contests</h2>
+    <table class="ui sortable celled table">
+    <thead>
+      <tr>
+        <th class="">ID</th>
+        <th class="">Name</th>
+        <th class="">Body</th>
+        <th class="">Question Count</th>
+        <th class="">Answers</th>  
+        <th class="">Active</th>  
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for contest in contests.values()|sort(attribute='id') %}
+        <tr>
+          <td>{{ contest.id}}</td>
+          <td>{{ contest.name}}</td>
+          <td>{{ contest.body}}</td>
+          <td>{{ contest.num_questions}}</td>
+          <td>{{ contest.answers}}</td>
+          <td>{{ contest.active}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<div>
+    <h2>Submissions</h2>
+    <table class="ui sortable celled table">
+    <thead>
+      <tr>
+        <th class="">ID</th>
+        <th class="">Student ID</th>
+        <th class="">Contest ID</th>
+        <th class="">Answers</th>
+        <th class="">Raw Score</th>  
+        <th class="">Adj Score</th>  
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for submission in submissions.values()|sort(attribute='id') %}
+        <tr>
+          <td>{{ submission.id}}</td>
+          <td>{{ submission.student_id}}</td>
+          <td>{{ submission.contest_id}}</td>
+          <td>{{ submission.answers}}</td>
+          <td>{{ submission.raw_score}}</td>
+          <td>{{ submission.adj_score}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/vendor/tablesort.js') }}"></script>
+<script>$('table').tablesort()</script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+
+{% endblock %}

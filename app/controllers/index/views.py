@@ -13,14 +13,37 @@ ACCESS_TOKEN_LENGTH = 12
 def index():
     return render_template("index.html")
 
-@index_bp.route('/sign_in', methods=['GET'])
-def sign_in():
-    return render_template("sign_in.html")
+
+@index_bp.route('/sign_in/<status>', methods=['GET'])
+def sign_in(status):
+    # status can be either blank, incorrect, or dne
+    return render_template(
+        "sign_in.html",
+        status=status)
+
+@index_bp.route('/handle_sign_in', methods=['POST'])
+def handle_sign_in():
+    req = request.form
+    print(req)
+    s = Student.query.filter_by(email=req["email"]).one_or_none()
+    print("hey look ma i made it")
+    if (s == None):
+        return redirect(url_for(".sign_in", status="dne"))
+    salted_password = h = hashlib.md5((req["password"] + SALT).encode())
+    if (s.password != salted_password.hexdigest()):
+        print(salted_password.hexdigest())
+        return redirect(url_for(".sign_in", status="incorrect"))
+    if (s.email == req["email"] and s.password == salted_password.hexdigest()):
+        print("success!")
+    else:
+        return "Error, please contact us at abmathcompetition@gmail.com"
+
 
 @index_bp.route('/register', methods=['GET'])
 def register():
     return render_template("register.html")
 
+# TODO
 @index_bp.route('/profile', methods=['GET'])
 def profile():
     return render_template("profile.html")
@@ -29,28 +52,27 @@ def profile():
 def reset():
     return render_template("reset.html")
 
-@index_bp.route('/handle_reset', methods=['GET'])
-def reset_password():
+@index_bp.route('/handle_reset', methods=['POST'])
+def handle_reset():
     req = request.form
-    print(req)
+    s = Student.query.filter_by(email=req["email"]).first()
+    if (s == None):
+        return redirect(url_for('.no_account'))
     generated_password = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k = PASSWORD_LENGTH))
-    print(f'generated_password is {generated_password}') 
     h = hashlib.md5((generated_password + SALT).encode())
-    s = Student.query.filter_by(email=req["email"]).first()
-    s.populate(access_token, req["name"], req["email"], h.hexdigest(), req["grade"], req["gender"], req["school"], True)
-    db.session.add(s)
+    s.password = h.hexdigest()
     db.session.commit()
 
     msg = Message('ABMC Account Password', sender = 'abmathcompetition@gmail.com', recipients = ['awang23@mit.edu'])
     msg.body = f'''Goodday traveler,
     
-This email contains the account information for user {req["name"]}.
+This email contains the account information for user {s.name}.
 
-Name: {req["name"]}
-Email: {req["email"]}
-School: {req["school"]}
-Grade: {req["grade"]}
+Name: {s.name}
+Email: {s.email}
+School: {s.school}
+Grade: {s.grade}
 Password: {generated_password}
 
 Please sign in on the submission platform using these credentials to submit your answers.
@@ -61,8 +83,8 @@ The ABMC Team
     mail.send(msg)
     
     return redirect(url_for(".success"))
-    return redirect(url_for(".password"))
 
+# TODO
 @index_bp.route('/contest', methods=['GET'])
 def contest():
     return render_template("contest.html")
@@ -75,16 +97,23 @@ def success():
 def no_account():
     return render_template("no_account.html")
 
+@index_bp.route('/user_exists', methods=['GET'])
+def user_exists():
+    return render_template("user_exists.html")
+
 @index_bp.route('/handle_register', methods=['POST'])
 def handle_register():
     req = request.form
-    print(req)
     generated_password = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k = PASSWORD_LENGTH))
-    print(f'generated_password is {generated_password}') 
     h = hashlib.md5((generated_password + SALT).encode())
     access_token = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k = ACCESS_TOKEN_LENGTH))
+    
+    res = Student.query.filter_by(email=req["email"]).one_or_none()
+    if (res != None):
+        return redirect(url_for(".user_exists"))
+
     s = Student()
     s.populate(access_token, req["name"], req["email"], h.hexdigest(), req["grade"], req["gender"], req["school"], True)
     db.session.add(s)

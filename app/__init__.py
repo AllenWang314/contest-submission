@@ -25,6 +25,13 @@ def create_app():
         # TODO add load_from_env call
         print("Loading from environment variables")
 
+    # set up tokens
+    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+    app.config['JWT_COOKIE_SECURE'] = True
+    app.config['JWT_ACCESS_COOKIE_PATH'] = '/api/'
+    app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
+    app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+
     # set up emails
     application.config['MAIL_SERVER'] ='smtp.gmail.com'
     application.config['MAIL_PORT'] = 465
