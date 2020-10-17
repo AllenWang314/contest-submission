@@ -2,10 +2,12 @@ import os
 from flask import Flask, session, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_jwt_extended import JWTManager
 
 application = None
 db = None
 mail = None
+jwt = None
 
 # sets config from environment variables
 def load_from_env(app, *args):
@@ -13,7 +15,7 @@ def load_from_env(app, *args):
         app.config[a] = os.environ[a]
 
 def create_app():
-    global application, db, bcrypt, session, mail
+    global application, db, bcrypt, session, mail, jwt
 
     application = Flask(__name__, static_folder='static')
 
@@ -22,15 +24,24 @@ def create_app():
         application.config.from_pyfile('../config.py')
         print("Loading secret configs from file")
     else:
-        # TODO add load_from_env call
-        print("Loading from environment variables")
+        load_from_env(application, 'SQLALCHEMY_DATABASE_URI',
+                                    'DEBUG',
+                                    'SQLALCHEMY_TRACK_MODIFICATIONS',
+                                    'DEPLOY',
+                                    'ADMIN_USERNAME',
+                                    'ADMIN_PASSWORD',
+                                    'MAIL_DEBUG',
+                                    'MAIL_USERNAME',
+                                    'MAIL_PASSWORD',
+                                    'JWT_SECRET_KEY')
 
     # set up tokens
-    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
-    app.config['JWT_COOKIE_SECURE'] = True
-    app.config['JWT_ACCESS_COOKIE_PATH'] = '/api/'
-    app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
-    app.config['JWT_COOKIE_CSRF_PROTECT'] = True
+    application.config['JWT_TOKEN_LOCATION'] = ['cookies']
+    application.config['JWT_COOKIE_SECURE'] = False
+    application.config['JWT_ACCESS_COOKIE_PATH'] = '/api/'
+    application.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
+    application.config['JWT_COOKIE_CSRF_PROTECT'] = True
+    jwt = JWTManager(application)
 
     # set up emails
     application.config['MAIL_SERVER'] ='smtp.gmail.com'

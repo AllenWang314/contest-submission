@@ -24,6 +24,11 @@
   </head>
   <body>
     <div id="content">
+      <ul>
+        <li><a href="{{url_for('index.index', status='blank')}}">Home</a>
+        <li><a href="{{url_for('index.contest', status='blank')}}">Contest</a></li>
+        <li><a href="{{url_for('index.register')}}">Register</a></li>
+      </ul>
       {% block content %}
       {% endblock %}
     </div>

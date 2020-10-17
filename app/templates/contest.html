@@ -2,24 +2,43 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-<form method="post">
+<div>{{contest.name}}</div>
+
+<div>{{contest.body}}</div>
+
+{% if status == "incorrect" %}
+      <div class="status">Incorrect password, please try again.</div>
+    {% elif status == "dne" %}
+      <div class="status">Email is not associated with a user, please register or try another email.</div>
+      {% elif status == "expired" %}
+      <div class="status">The contest has ended. Submissions are no longer being accepted.</div>
+    {% endif %}
+
+
+
+<form action="{{ url_for('index.handle_submission') }}" method="post">
   
     <div class="container">
-      <label for="uname"><b>Q1</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
   
-      <label for="psw"><b>Q2</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-      <label for="uname"><b>Q3</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
       
-      <label for="uname"><b>Q4</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-
+      {% for i in range(1, 16) %} 
+  
+      <label for="q{{i}}"><b>Question {{i}}</b></label>
+      <input type="number" placeholder="" name="q{{i}}">
+      
+      {% endfor %}
+      
       <button type="submit">Submit</button>
     </div>
   
   </form>
+  <div class="container" style="background-color:#f1f1f1">
+    <a href={{url_for('index.reset')}} >    <button>Forgot Password</button></a>
+  </div>
   
   <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
     crossorigin="anonymous"></script>
