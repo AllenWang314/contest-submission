@@ -3,7 +3,6 @@
 {% block content %}
 
 <div>
-There is already an account associated with the email submitted, please try 
-signing in <a href="{{url_for('index.sign_in')}}">here</a>
+There is already an account associated with the email submitted, please submit your answers using the email <a href="{{url_for('index.contest', status='blank')}}">here</a>
 </div>
 {% endblock %}
